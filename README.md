@@ -1,6 +1,11 @@
 # Azure Update Cert
 
-Create SSl certificate for Azure web application.
+Create SSL certificate  and bind domain for Azure web application:
+
+1. Create web SSL certificate for certificate taken from key vault SSL certificate ( `kv-id`, `kv-secret-name` )
+
+2. Create domain (`domain`) for app service (`app-service-name`) and certificate ( `thumbprint` ). Thumbprint should be the thumbprint 
+of the certificate created by first step.
 
 # Prerequisites
 
