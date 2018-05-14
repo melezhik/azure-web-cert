@@ -15,7 +15,7 @@ of the certificate created by first step.
 
     $ nano config.pl6
 
-    $ sparrowdo --git=https://github.com/melezhik/azure-web-cert.git
+    $ sparrowdo --git=https://github.com/melezhik/azure-web-cert.git --local_mode
 
 # Config.pl6
 
