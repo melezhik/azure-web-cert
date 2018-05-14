@@ -32,31 +32,35 @@ task-run "validate json files", "json-lint", %(
   path => "$base-dir/arm"
 );
 
+my $mode = config<mode> || 'default';
 
-if config<mode> && config<mode> eq 'dry-run' { 
-  exit;
+say "mode: $mode";
+
+if $mode eq 'validate' or $mode eq 'default' { 
+
+  bash qq:to/HERE/, %(  description => "validate az group deploy / create cert", expect_stdout => 'Succeeded' );
+    set -x
+    az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
+  HERE
+
+  bash qq:to/HERE/, %(  description => "validate az group deploy / update cert", expect_stdout => 'Succeeded');
+    set -x
+    az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
+  HERE
+
 }
 
-bash qq:to/HERE/, %(  description => "validate az group deploy / create cert", expect_stdout => 'Succeeded' );
-  set -x
-  az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
-HERE
+if $mode eq 'default' { 
 
-bash qq:to/HERE/, %(  description => "validate az group deploy / update cert", expect_stdout => 'Succeeded');
-  set -x
-  az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
-HERE
+  bash qq:to/HERE/, %(  description => "run az group deploy / create cert", expect_stdout => 'create-cert\s+' ~ $az-res-group );
+    set -x
+    az group deployment create -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
+  HERE
 
-if config<mode> && config<mode> eq 'validate' { 
-  exit;
+  bash qq:to/HERE/, %(  description => "run az group deploy / update cert" , expect_stdout => 'update-cert\s+' ~ $az-res-group );
+    set -x
+    az group deployment create -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
+  HERE
+
 }
 
-bash qq:to/HERE/, %(  description => "run az group deploy / create cert", expect_stdout => 'create-cert\s+' ~ $az-res-group );
-  set -x
-  az group deployment create -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
-HERE
-
-bash qq:to/HERE/, %(  description => "run az group deploy / update cert" , expect_stdout => 'update-cert\s+' ~ $az-res-group );
-  set -x
-  az group deployment create -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
-HERE
