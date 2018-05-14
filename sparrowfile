@@ -33,7 +33,7 @@ task-run "validate json files", "json-lint", %(
 );
 
 
-if config<mode> && config<mode> == 'dry-run' { 
+if config<mode> && config<mode> eq 'dry-run' { 
   exit;
 }
 
@@ -47,7 +47,7 @@ bash qq:to/HERE/, %(  description => "validate az group deploy / update cert", e
   az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
 HERE
 
-if config<mode> && config<mode> == 'validate' { 
+if config<mode> && config<mode> eq 'validate' { 
   exit;
 }
 
