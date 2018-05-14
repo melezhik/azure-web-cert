@@ -39,19 +39,36 @@ Key vault secret name
 Azure application service name
 
 
-# Dry run mode
+# Modes
 
-Set config<dry-run> to true:
+## Dry run mode
+
+In this mode ARM templates are generated, but not executed.
+
+Set config<mode> to `dry-run`:
 
     $ cat config.pl  
 
     {
 
-      dry-run => True,
+      mode => 'dry-run',
       # Other params
     }
 
-In this mode ARM templates are generated, but not applied
+## Validate mode
+
+In this mode ARM templates are generated, validated but not executed.
+
+Set config<mode> to `validate`:
+
+    $ cat config.pl  
+
+    {
+
+      mode => 'validate',
+      # Other params
+    }
+
 
 # Author
 
