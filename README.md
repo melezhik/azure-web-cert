@@ -43,12 +43,13 @@ Azure application service name
 
 Set config<dry-run> to true:
 
-  $ cat config.pl  
-  {
+    $ cat config.pl  
 
-    dry-run => True,
-    # Other params
-  }
+    {
+
+      dry-run => True,
+      # Other params
+    }
 
 In this mode ARM templates are generated, but not applied
 

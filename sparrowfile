@@ -1,4 +1,3 @@
-my $base-dir = "$*CWD/.azure";
 my $az-res-group = config<az-res-group>;
 my $thumbprint  = config<thumbprint>;
 my $domain = config<domain>;    
@@ -6,6 +5,7 @@ my $kv-id = config<kv-id>;
 my $kv-secret-name = config<kv-secret-name>;
 my $app-srv = config<app-service>;
 
+my $base-dir = '/home/' ~ %*ENV<USER> ~ '/.azure-web-cert/' ~ $domain;
 directory-delete $base-dir;
 directory "$base-dir/arm";
 
@@ -32,6 +32,10 @@ task-run "validate json files", "json-lint", %(
   path => "$base-dir/arm"
 );
 
+
+if config<dry-run> { 
+  exit;
+}
 
 bash qq:to/HERE/, %(  description => "validate az group deploy / create cert", expect_stdout => 'Succeeded' );
   set -x
