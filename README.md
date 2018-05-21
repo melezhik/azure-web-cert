@@ -54,6 +54,11 @@ Azure application service name
 
 
 # Modes
+##  Default
+
+This mode is applied by default. ARM templates are generated, validated and executed.
+
+You can choose options, read next two sections.
 
 ## Dry run mode
 
