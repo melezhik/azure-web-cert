@@ -95,7 +95,7 @@ Set config<mode> to `validate`:
 
     {
 
-      skip-crt-create => True
+      skip-cert-crt => True
       # Other params
     }
 
