@@ -14,7 +14,16 @@ of the certificate created by first step.
 # Usage
 
     $ nano config.pl6
-
+    
+    {
+        domain => "app.domain.foo",
+        thumbprint => "ABC010101H0A....",
+        az-res-group => "my-az-grp",
+        kv-id => "my-kv-storage",
+        kv-secret-name => "production-cert",
+        app-service => "app"
+    }
+    
     $ sparrowdo --git=https://github.com/melezhik/azure-web-cert.git --local_mode
 
 # Config.pl6
@@ -45,6 +54,11 @@ Azure application service name
 
 
 # Modes
+##  Default
+
+This mode is applied by default. ARM templates are generated, validated and executed.
+
+You can choose options, read next two sections.
 
 ## Dry run mode
 
@@ -52,7 +66,7 @@ In this mode ARM templates are generated, but not executed.
 
 Set config<mode> to `dry-run`:
 
-    $ cat config.pl  
+    $ cat config.pl6  
 
     {
 
@@ -66,7 +80,7 @@ In this mode ARM templates are generated, validated but not executed.
 
 Set config<mode> to `validate`:
 
-    $ cat config.pl  
+    $ cat config.pl6  
 
     {
 
