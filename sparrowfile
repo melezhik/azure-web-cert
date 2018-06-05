@@ -4,6 +4,7 @@ my $domain = config<domain>;
 my $kv-id = config<kv-id>;
 my $kv-secret-name = config<kv-secret-name>;
 my $app-srv = config<app-service>;
+my $skip-cert-crt = config<skip-cert-crt>;
 
 my $base-dir = '/home/' ~ %*ENV<USER> ~ '/.azure-web-cert/' ~ $domain;
 directory-delete $base-dir;
@@ -18,15 +19,19 @@ template-create "$base-dir/arm/update-cert.json", %(
   )
 );
 
-template-create "$base-dir/arm/create-cert.json", %(
-  source => ( slurp 'create-cert.json' ),
-  variables => %(
-    keyvault_id           => $kv-id,
-    keyvault_secret_name  => $kv-secret-name,
-    res_group             => $az-res-group,
-    thumbprint            => $thumbprint,
-  )
-);
+unless $skip-cert-crt {
+
+  template-create "$base-dir/arm/create-cert.json", %(
+    source => ( slurp 'create-cert.json' ),
+    variables => %(
+      keyvault_id           => $kv-id,
+      keyvault_secret_name  => $kv-secret-name,
+      res_group             => $az-res-group,
+      thumbprint            => $thumbprint,
+    )
+  );
+
+}
 
 task-run "validate json files", "json-lint", %(
   path => "$base-dir/arm"
@@ -38,24 +43,27 @@ say "mode: $mode";
 
 if $mode eq 'validate' or $mode eq 'default' { 
 
-  bash qq:to/HERE/, %(  description => "validate az group deploy / create cert", expect_stdout => 'Succeeded' );
-    set -x
-    az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
-  HERE
+  unless $skip-cert-crt {
+    bash qq:to/HERE/, %(  description => "validate az group deploy / create cert", expect_stdout => 'Succeeded' );
+      set -x
+      az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
+    HERE
+  }
 
   bash qq:to/HERE/, %(  description => "validate az group deploy / update cert", expect_stdout => 'Succeeded');
     set -x
     az group deployment validate  -g  $az-res-group  --template-file $base-dir/arm/update-cert.json
   HERE
-
 }
 
 if $mode eq 'default' { 
 
-  bash qq:to/HERE/, %(  description => "run az group deploy / create cert", expect_stdout => 'create-cert\s+' ~ $az-res-group );
-    set -x
-    az group deployment create -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
-  HERE
+  unless $skip-cert-crt {
+    bash qq:to/HERE/, %(  description => "run az group deploy / create cert", expect_stdout => 'create-cert\s+' ~ $az-res-group );
+      set -x
+      az group deployment create -g  $az-res-group  --template-file $base-dir/arm/create-cert.json
+    HERE
+  }
 
   bash qq:to/HERE/, %(  description => "run az group deploy / update cert" , expect_stdout => 'update-cert\s+' ~ $az-res-group );
     set -x

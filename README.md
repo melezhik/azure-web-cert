@@ -74,6 +74,16 @@ Set config<mode> to `validate`:
       # Other params
     }
 
+# Skip certificate creation stage
+
+
+    $ cat config.pl  
+
+    {
+
+      skip-crt-create => True
+      # Other params
+    }
 
 # Author
 
