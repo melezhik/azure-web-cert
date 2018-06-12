@@ -74,6 +74,9 @@ if $mode eq 'default' {
 
 
 if config<check-ssl> {
+  bash "sleep 8", %( 
+    description => "sleep for 8 seconds to let new certs apply" 
+  );
   task-run  "check ssl cert for $domain", "check-ssl-cert", %(
     hosts => [ $domain  ],
     expiration_date => 3,
