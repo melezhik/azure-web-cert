@@ -72,3 +72,10 @@ if $mode eq 'default' {
 
 }
 
+
+if config<check-ssl> {
+  task-run  "check ssl cert for $domain", "check-ssl-cert", %(
+    hosts => [ $domain  ],
+    expiration_date => 3,
+  )
+}

@@ -54,6 +54,7 @@ Azure application service name
 
 
 # Modes
+
 ##  Default
 
 This mode is applied by default. ARM templates are generated, validated and executed.
@@ -96,6 +97,16 @@ Set config<mode> to `validate`:
     {
 
       skip-cert-crt => True
+      # Other params
+    }
+
+# Check ssl cert
+
+    $ cat config.pl  
+
+    {
+
+      check-ssl => True
       # Other params
     }
 
